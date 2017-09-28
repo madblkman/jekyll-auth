@@ -29,3 +29,12 @@ heroku git:remote -a my-site
 4. Remove any Jekyll Auth specific requirements from your `Gemfile`
 5. Follow [the instructions above](https://github.com/benbalter/jekyll-auth#add-jekyll-auth-to-your-site) to get started
 6. When prompted, select "n" if Heroku is already set up
+
+### Solving "Not Found" or 404 issues after Heroku Deploy
+
+If you've completely configured the app but after deploying to Heroku you're receiving "Not Found" or 404 status codes the issue may be a missing `Procfile`. Because you're serving the application from the `jekyll-auth` server you have to explicitly tell Heroku to use that server versus the default server (WEBrick) it would use. 
+
+* In your root file create a `Procfile` and put `web: bundle exec jekyll-auth serve --port $PORT --host 0.0.0.0` at the top of this file. 
+* The `web` key declares the command `bundle exec jekyll-auth serve --port $PORT --host 0.0.0.0` when it instantiates a web dyno. 
+* The `--port $PORT` will use the port whatever the Heroku environment sets when instantiating the dyno. 
+* `--host 0.0.0.0` will take advantage of the host that the jekyll-auth app is living on.
